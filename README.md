@@ -7,6 +7,8 @@ Befor build please install task tool. go version >= 1.10.4 && git version >= 2.1
 task -l
 
 eg:
+
+
     task prebuild
 
     task build
@@ -18,22 +20,32 @@ eg:
 
 NOTE: 
 
+
+
 In the development state.
 
 
+
 After build.
+
 
 mysql2mongo Start
 
 ./bin/start.sh
 
+
+
 mysql2mongo Stop
 
 ./bin/stop.sh
 
+
+
 mysql2mongo Restart
 
 ./bin/restart.sh
+
+
 
 mysql2mongo status
 
