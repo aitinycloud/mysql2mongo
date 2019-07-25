@@ -1,0 +1,87 @@
+version: '2'
+
+
+
+vars:
+  EXE: mysql2mongo
+  EXEPATH: bin
+  SERVICE_VERSION: V1.0.0
+
+tasks:
+  default:
+    cmds:
+      - task: run
+
+  run:
+    desc: Build and Run mysql2mongo
+    cmds:
+      - bash bin/start.sh
+
+  stop:
+    desc: Stop mysql2mongo
+    cmds:
+      - bash bin/stop.sh
+  
+  prebuild:
+    desc: "Development environment preinstall"
+    cmds:
+      - cmd: echo "Check golang environment."
+      - cmd: go version && go env
+      - cmd: echo "Development environment preinstall , please wait..."
+      - task: downloaddeps
+    silent: true
+
+  build:
+    desc: Build mysql2mongo
+    cmds:
+      - go build -v -o {{.EXEPATH}}/{{.EXE}} main.go
+
+  install:
+    desc: Install mysql2mongo
+    cmds:
+      - cp -Rf bin release
+      - cp -Rf cfg release
+      - cp -Rf /usr/local/mysql2mongo release/*
+
+  release:
+    desc: Release version
+    cmds:
+      - cp -Rf bin release
+      - cp -Rf cfg release
+      - tar -czf mysql2mongo_{{.SERVICE_VERSION}}_{{now | date "20060102"}}.tar.gz release
+      - echo Release Package mysql2mongo_{{.SERVICE_VERSION}}_{{now | date "20060102"}} Success.
+    silent: true
+
+  status:
+    desc: mysql2mongo run status.
+    cmds:
+      - bash bin/check.sh
+    silent: true
+  
+  dockerimage:
+    desc: create docker image for mysql2mongo.
+    cmds:
+      - bash docker build -t mysql2mongo .
+
+  dockerimagerun:
+    desc: create docker image for mysql2mongo.
+    cmds:
+      - bash docker run -d --name=mysql2mongo -v ./cfg:/opt/mysql2mongo/cfg -v ./logs:/opt/mysql2mongo/logs mysql2mongo
+
+  test:
+    desc: Test mysql2mongo
+    cmds:
+      - go test -v --race -timeout 30S ./...
+
+  downloaddeps:
+    desc: DownLoad Update package and Install tools required to build.
+    cmds:
+      - task: go-get
+        vars: {REPO: "github.com/siddontang/go-mysql"}
+      - task: go-get
+        vars: {REPO: "github.com/gookit/config"}
+      - task: go-get
+        vars: {REPO: "github.com/gookit/config/json"}
+  go-get:
+    cmds:
+      - go get -v "{{.REPO}}"
