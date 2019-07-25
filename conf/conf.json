@@ -1,0 +1,22 @@
+{
+	"binloginfo": {
+		"bin_name": "",
+		"bin_pos": 0
+	},
+	"mysql": {
+		"dbname": "testdb",
+		"host": "192.168.1.88:3306",
+		"password": "root",
+		"type": "mysql",
+		"user": "root"
+	},
+	"servername": "mysql2mongo",
+	"serverselfid": "100",
+	"mongo": {
+		"dbname": "insight",
+		"host": "192.168.1.80:27017",
+		"password": "root",
+		"type": "mongo",
+		"user": "root"
+	}
+}
